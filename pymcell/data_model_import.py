@@ -179,8 +179,8 @@ def create_release_sites_from_dm(
         spec = species[spec_name]
         quantity = int(rel_site_dm['quantity'])
         orient = rel_site_dm['orient']
-        odict = {"'": Orient.up, ",": Orient.down, ";": Orient.mix}
-        spec_orient = OrientedSpecies(spec, odict[orient])
+        odict = {"'": m.Orient.up, ",": m.Orient.down, ";": m.Orient.mix}
+        spec_orient = m.OrientedSpecies(spec, odict[orient])
         # XXX: this is really clunky.
         reg = None
         for r in meshobj.regions:
@@ -191,6 +191,7 @@ def create_release_sites_from_dm(
             rel = m.ObjectRelease(spec_orient, number=quantity, region=reg)
         else:
             rel = m.ObjectRelease(spec_orient, number=quantity, mesh_obj=meshobj)
+
         world.release(rel)
 
 
