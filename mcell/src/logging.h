@@ -32,10 +32,10 @@
 #define no_printf(fmt, ...)                                                    \
   do { /* do nothing */                                                        \
   } while (0)
-#ifdef printf
-#undef printf
-#endif
-#define printf(fmt, ...) DO_NOT_USE_PRINTF(fmt, ##__VA_ARGS__)
+//#ifdef printf
+//#undef printf
+//#endif
+//#define printf(fmt, ...) DO_NOT_USE_PRINTF(fmt, ##__VA_ARGS__)
 #endif
 
 #define UNHANDLED_CASE(v)                                                      \

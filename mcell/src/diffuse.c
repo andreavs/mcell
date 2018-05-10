@@ -38,6 +38,9 @@
 #include "react.h"
 #include "react_nfsim.h"
 #include "nfsim_func.h"
+#include "electric_field.h"
+
+//extern struct vector3 *electric_field;
 
 
 #define FREE_COLLISION_LISTS()                                                 \
@@ -4884,6 +4887,16 @@ void compute_displacement(struct volume* world, struct collision* shead,
       pick_displacement(displacement, *rate_factor * m->get_space_step(m), world->rng);
     }
   }
+
+    struct vector3 *efield = malloc(sizeof(*efield));
+    double psi = 0.025852;
+    set_electric_field(efield, m->pos.x, m->pos.y, m->pos.z);
+//    printf("%.3f", m->properties->D*m->get_time_step(m)*efield->x/psi);
+    displacement->x += m->properties->D*m->get_time_step(m)*efield->x/(100*psi);
+    displacement->y += m->properties->D*m->get_time_step(m)*efield->y/(100*psi);
+    displacement->z += m->properties->D*m->get_time_step(m)*efield->z/(100*psi);
+//  printf("%f", electric_field->x);
+
 
   if (spec->flags & SET_MAX_STEP_LENGTH) {
     double disp_length = vect_length(displacement);

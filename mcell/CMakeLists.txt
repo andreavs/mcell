@@ -81,6 +81,8 @@ set(SOURCE_FILES
     src/dyngeom_parse_extras.c
     src/dyngeom_parse_extras.h
     src/dyngeom_yacc.c
+    src/electric_field.c
+    src/electric_field.h
     src/grid_util.c
     src/grid_util.h
     src/hashmap.c
@@ -198,6 +200,7 @@ swig_add_library(pymcell LANGUAGE python SOURCES src/pymcell.i
   src/dyngeom_lex.c
   src/dyngeom_parse_extras.c
   src/dyngeom_yacc.c
+  src/electric_field.c
   src/grid_util.c
   src/hashmap.c
   src/init.c
