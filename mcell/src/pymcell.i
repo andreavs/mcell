@@ -98,6 +98,7 @@
 #include "mcell_dyngeom.h"
 #include "vector.h"
 #include "diffuse.h"
+#include "electric_field.h"
 
 
 %}
@@ -127,6 +128,7 @@ lib2 = cdll.LoadLibrary(dirname(__file__) + '/../libnfsim_c.so')
 %include "mcell_structs.i"
 %include "mcell_dyngeom.i"
 %include "vector.i"
+%include "electric_field.i"
 // %include "diffuse.i"
 
 // Generate docstrings

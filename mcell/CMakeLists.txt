@@ -9,6 +9,7 @@ SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/deps)
 include_directories("${CMAKE_SOURCE_DIR}/src" "${CMAKE_CURRENT_BINARY_DIR}/deps" "${CMAKE_SOURCE_DIR}/../nfsim/include" "${CMAKE_SOURCE_DIR}/../nfsimCInterface/src")
 
+
 # move config.h into place. Unix and Windows have different header files
 if (UNIX)
   file(COPY ${CMAKE_SOURCE_DIR}/src/config-nix.h DESTINATION
@@ -175,8 +176,14 @@ link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 FIND_PACKAGE(SWIG REQUIRED)
 INCLUDE(${SWIG_USE_FILE})
 
-FIND_PACKAGE(PythonLibs 3 REQUIRED)
+
+include_directories("/home/andreavs/anaconda3/envs/knpsim/include/python3.6m")
+
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
+# target_link_libraries(mcell ${PYTHON_LIBRARIES})
+
 
 # INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -267,7 +274,7 @@ add_executable(mcell
   src/mcell.c
   ${BISON_mdlParser_OUTPUTS}
   ${FLEX_mdlScanner_OUTPUTS})
-target_link_libraries(mcell ${M_LIB} nfsim_c NFsim)
+target_link_libraries(mcell ${M_LIB} nfsim_c NFsim ${PYTHON_LIBRARIES})
 
 
 

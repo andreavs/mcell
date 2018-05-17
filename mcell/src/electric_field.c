@@ -1,32 +1,81 @@
-#include "electric_field.h"
 #include <stdio.h>
-#include <Python.h>
+#include "electric_field.h"
 
-static PyObject *my_callback = NULL;
+void initialize_electric_field(){
+    Py_Initialize();
 
-static PyObject *
-my_set_callback(PyObject *dummy, PyObject *args)
-{
-    PyObject *result = NULL;
-    PyObject *temp;
+    PyObject *sys = PyImport_ImportModule("sys");
+    PyObject *path = PyObject_GetAttrString(sys, "path");
+    PyList_Append(path, PyUnicode_FromString("."));
 
-    if (PyArg_ParseTuple(args, "O:set_callback", &temp)) {
-        if (!PyCallable_Check(temp)) {
-            PyErr_SetString(PyExc_TypeError, "parameter must be callable");
-            return NULL;
-        }
-        Py_XINCREF(temp);         /* Add a reference to new callback */
-        Py_XDECREF(my_callback);  /* Dispose of previous callback */
-        my_callback = temp;       /* Remember new callback */
-        /* Boilerplate to return "None" */
-        Py_INCREF(Py_None);
-        result = Py_None;
+    // Build the name object
+    pName = PyUnicode_DecodeFSDefault("electric_field_class");
+    if (!pName)
+    {
+        PyErr_Print();
+        printf("ERROR in pName\n");
+        exit(1);
     }
-    return result;
+
+//     Load the module object
+    pModule = PyImport_Import(pName);
+    if (!pModule)
+    {
+        PyErr_Print();
+        printf("ERROR in pModule\n");
+        exit(1);
+    }
+
+    // pDict is a borrowed reference
+    pDict = PyModule_GetDict(pModule);
+    if (!pDict)
+    {
+        PyErr_Print();
+        printf("ERROR in pDict\n");
+        exit(1);
+    }
+
+
+    // Build the name of a callable class
+    pClass = PyDict_GetItemString(pDict, "Electric_field");
+    if (!pClass)
+    {
+        PyErr_Print();
+        printf("ERROR in pClass\n");
+        exit(1);
+    }
+
+
+    // Create an instance of the class
+    if (PyCallable_Check(pClass))
+    {
+        pInstance = PyObject_CallObject(pClass, NULL);
+    }
+    if (!pInstance)
+    {
+        PyErr_Print();
+        printf("ERROR in pInstance\n");
+        exit(1);
+    }
+}
+
+void update_electric_field(PyObject *new_electric_field){
+        PyObject_SetAttrString(pInstance, "electric_field", new_electric_field);
 }
 
 void set_electric_field(struct vector3 *electric_field, double x, double y, double z){
-    electric_field->x = 1e4*x;
-    electric_field->y = 1e4*y;
-    electric_field->z = 0;
+    pValue = PyObject_CallMethod(pInstance, "get_electric_field", "(ddd)", x, y, z);
+    if(!pValue)
+    {
+        PyErr_Print();
+        printf("Something went wrong! \n");
+    }
+
+    int ok;
+    ok = PyArg_ParseTuple(pValue, "ddd", &x, &y, &z);
+
+
+    electric_field->x = x;
+    electric_field->y = y;
+    electric_field->z = z;
 }
