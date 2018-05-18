@@ -174,6 +174,8 @@ def create_release_sites_from_dm(
         else:
             object_name = object_expr
             reg_name = ""
+        print(object_name)
+        print(meshobjs[object_name])
         meshobj = meshobjs[object_name]
         spec_name = rel_site_dm['molecule']
         spec = species[spec_name]

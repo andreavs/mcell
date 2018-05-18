@@ -76,6 +76,7 @@ class Species:
         self.name = name
         self.diffusion_constant = diffusion_constant
         self.surface = surface
+        self.z = 0
         vol_surf = "surface" if surface else "volume"
         logging.info("Creating %s species '%s'" % (vol_surf, name))
 
@@ -348,7 +349,7 @@ class MCellSim:
     def add_single_species(self, spec):
         if spec.name not in self._species:
             spec_sym = m.create_species(
-                self._world, spec.name, spec.diffusion_constant, spec.surface)
+                self._world, spec.name, spec.diffusion_constant, spec.surface, z=spec.z)
             self._species[spec.name] = spec_sym
             self.species[spec.name] = spec
             logging.info("Add species '%s' to simulation" % spec.name)
@@ -786,7 +787,7 @@ def create_count(world, where, mol_sym, file_path, step):
     return (count_list, os, out_times, output)
 
 
-def create_species(world, name, D, is_2d, custom_time_step=0):
+def create_species(world, name, D, is_2d, custom_time_step=0, z=0):
     """Creates a molecule species
 
     Args:
@@ -800,6 +801,7 @@ def create_species(world, name, D, is_2d, custom_time_step=0):
             surface molecule
         custom_time_step -- Custom time step (< 0.0 for a custom space step,
                        >0.0 for custom timestep, 0.0 for default timestep)
+        z (int) -- Valence (charge) of the molecule species
     Returns:
         (mcell_symbol) Returns a species sym_entry
 
@@ -812,6 +814,7 @@ def create_species(world, name, D, is_2d, custom_time_step=0):
     species_def.custom_time_step = custom_time_step
     species_def.target_only = 0
     species_def.max_step_length = 0
+    species_def.z = z
 
     species_temp_sym = m.mcell_symbol()
     species_sym = m.mcell_create_species(
@@ -1010,6 +1013,8 @@ def create_release_site(
 
     mol_list = m.mcell_add_to_species_list(mol_sym, False, 0, None)
     rel_object = m.object()
+    print(type(world), type(scene), type(name), type(shape), type(position))
+    print(shape)
     release_object = m.mcell_create_geometrical_release_site(
         world, scene, name, shape, position, diameter, mol_list, float(number),
         number_type, 1, None, rel_object)

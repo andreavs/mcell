@@ -4890,12 +4890,15 @@ void compute_displacement(struct volume* world, struct collision* shead,
 
     struct vector3 *efield = malloc(sizeof(*efield));
     double psi = 0.025852;
+//      printf("%f\n", m->pos.x);
+//      printf("%f\n", m->pos.y);
+//      printf("%f\n", m->pos.z);
     set_electric_field(efield, m->pos.x, m->pos.y, m->pos.z);
-//    printf("%.3f", m->properties->D*m->get_time_step(m)*efield->x/psi);
-    displacement->x += m->properties->D*m->get_time_step(m)*efield->x/(100*psi);
-    displacement->y += m->properties->D*m->get_time_step(m)*efield->y/(100*psi);
-    displacement->z += m->properties->D*m->get_time_step(m)*efield->z/(100*psi);
-//  printf("%f", electric_field->x);
+//    printf("%d\n", m->properties->z);
+    displacement->x += m->properties->z*m->properties->D*m->get_time_step(m)*efield->x/(100*psi);
+    displacement->y += m->properties->z*m->properties->D*m->get_time_step(m)*efield->y/(100*psi);
+    displacement->z += m->properties->z*m->properties->D*m->get_time_step(m)*efield->z/(100*psi);
+
 
 
   if (spec->flags & SET_MAX_STEP_LENGTH) {
