@@ -1058,6 +1058,8 @@ struct reaction_flags {
 
 /* All data about the world */
 struct volume {
+  // Electric field
+  struct vector3 *efield;
 
   // These are only used with dynamic geometry
   struct dyngeom_parse_vars *dg_parse;

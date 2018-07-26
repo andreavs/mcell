@@ -129,9 +129,9 @@ def create_surface_classes_from_dm(
             spec = spec_dict[spec_name]
             sc_enums = {"TRANSPARENT": m.SC.transp , "REFLECTIVE": m.SC.reflect,  "ABSORPTIVE": m.SC.absorb }
             surf_class_type = sc_enums[sc_prop_dm['surf_class_type']]
-            odict = {"'": Orient.up, ",": Orient.down, ";": Orient.mix}
+            odict = {"'": m.Orient.up, ",": m.Orient.down, ";": m.Orient.mix}
             orient = odict[sc_prop_dm['surf_class_orient']]
-            spec_orient = OrientedSpecies(spec, orient)
+            spec_orient = m.OrientedSpecies(spec, orient)
             sc = m.SurfaceClass(surf_class_type, spec_orient, name=sc_name)
             sc_dict[sc_name] = sc
     return sc_dict

@@ -9,7 +9,7 @@ void initialize_electric_field(){
     PyList_Append(path, PyUnicode_FromString("."));
 
     // Build the name object
-    pName = PyUnicode_DecodeFSDefault("electric_field_class");
+    pName = PyUnicode_DecodeFSDefault("pymcell.electric_field_class");
     if (!pName)
     {
         PyErr_Print();
@@ -60,9 +60,24 @@ void initialize_electric_field(){
 }
 
 void update_electric_field(PyObject *new_electric_field){
-        PyObject_SetAttrString(pInstance, "electric_field", new_electric_field);
+        PyObject_SetAttrString(pInstance, "get_electric_field", new_electric_field);
 }
 
+void set_electric_field(struct vector3 *electric_field, struct volume_molecule *m){
+    pValue = PyObject_CallMethod(pInstance, "get_electric_field", "(ddd)", 0, 0, 0);
+    if(!pValue)
+    {
+        PyErr_Print();
+    }
+
+//    PyArg_ParseTuple(pValue, "ddd", &electric_field->x, &electric_field->y, &electric_field->z);
+    electric_field->x = 0;
+    electric_field->y = 0;
+    electric_field->z = 0;
+    Py_DECREF(pValue);
+}
+
+/*
 void set_electric_field(struct vector3 *electric_field, double x, double y, double z){
     pValue = PyObject_CallMethod(pInstance, "get_electric_field", "(ddd)", x, y, z);
     if(!pValue)
@@ -79,3 +94,4 @@ void set_electric_field(struct vector3 *electric_field, double x, double y, doub
     electric_field->y = y;
     electric_field->z = z;
 }
+*/

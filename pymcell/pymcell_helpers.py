@@ -434,7 +434,7 @@ class MCellSim:
                 self._regions[full_reg_name] = region_swig_obj
         logging.info("Add geometry '%s' to simulation" % mesh_obj.name)
 
-    def add_viz(self, species: Iterable[Species]) -> None:
+    def add_viz(self, species: Iterable[Species], step=1, folder_name='.') -> None:
         """ Set all the species in an Iterable to be visualized. """
         viz_list = None
         for spec in species:
@@ -442,8 +442,8 @@ class MCellSim:
                 self._species[spec.name], False, 0, viz_list)
             logging.info("Output '%s' for viz data." % spec.name)
         m.mcell_create_viz_output(
-            self._world, "./viz_data/seed_%04i/Scene" % self._seed, viz_list,
-            0, self._iterations, 1)
+            self._world, folder_name + "/viz_data/seed_%04i/Scene" % self._seed, viz_list,
+            0, self._iterations, step)
 
     def release(self, relobj):
         """ Release molecules in/on an object or as a ListRelease. """
@@ -578,7 +578,7 @@ class MCellSim:
             axis_num = 2
         m.create_partitions(self._world, axis_num, start, stop, step)
 
-    def add_count(self, species: Species, mesh_obj: MeshObj = None,  reg: SurfaceRegion = None) -> None:
+    def add_count(self, species: Species, mesh_obj: MeshObj = None,  reg: SurfaceRegion = None, folder_name='.') -> None:
         """ Set a species (possibly in/on a surface) to be counted """
         species_sym = self._species[species.name]
         if mesh_obj:

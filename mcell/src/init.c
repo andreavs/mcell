@@ -300,6 +300,7 @@ int init_variables(struct volume *world) {
   world->all_vertices = NULL;
   world->walls_using_vertex = NULL;
   world->periodic_box_obj = NULL;
+  world->efield = malloc(sizeof(world->efield));
 
   world->use_expanded_list = 1;
   world->randomize_smol_pos = 1;
