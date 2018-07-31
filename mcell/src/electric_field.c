@@ -64,16 +64,14 @@ void update_electric_field(PyObject *new_electric_field){
 }
 
 void set_electric_field(struct vector3 *electric_field, struct volume_molecule *m){
-    pValue = PyObject_CallMethod(pInstance, "get_electric_field", "(ddd)", 0, 0, 0);
+    pValue = PyObject_CallMethod(pInstance, "get_electric_field", "(ddd)", m->pos.x, m->pos.y, m->pos.z);
     if(!pValue)
     {
         PyErr_Print();
     }
 
-//    PyArg_ParseTuple(pValue, "ddd", &electric_field->x, &electric_field->y, &electric_field->z);
-    electric_field->x = 0;
-    electric_field->y = 0;
-    electric_field->z = 0;
+    PyArg_ParseTuple(pValue, "ddd", &electric_field->x, &electric_field->y, &electric_field->z);
+
     Py_DECREF(pValue);
 }
 

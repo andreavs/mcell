@@ -434,7 +434,7 @@ class MCellSim:
                 self._regions[full_reg_name] = region_swig_obj
         logging.info("Add geometry '%s' to simulation" % mesh_obj.name)
 
-    def add_viz(self, species: Iterable[Species], step=1, folder_name='.') -> None:
+    def add_viz(self, species: Iterable[Species], step=1, folder_name='./') -> None:
         """ Set all the species in an Iterable to be visualized. """
         viz_list = None
         for spec in species:
@@ -442,7 +442,7 @@ class MCellSim:
                 self._species[spec.name], False, 0, viz_list)
             logging.info("Output '%s' for viz data." % spec.name)
         m.mcell_create_viz_output(
-            self._world, folder_name + "/viz_data/seed_%04i/Scene" % self._seed, viz_list,
+            self._world, folder_name + "viz_data/seed_%04i/Scene" % self._seed, viz_list,
             0, self._iterations, step)
 
     def release(self, relobj):
@@ -551,6 +551,11 @@ class MCellSim:
             self, species: Species, count: int, shape: str,
             pos_vec3: Vector3 = None, diam_vec3=None) -> None:
         """ Create a spherical/cubic release site. """
+        if isinstance(species, m.OrientedSpecies):
+            orient = species.orient_num
+            species = species.spec
+        else:
+            orient = None
         if pos_vec3 is None:
             pos_vec3 = m.Vector3()
         if diam_vec3 is None:
@@ -561,6 +566,7 @@ class MCellSim:
             shape = m.SHAPE_SPHERICAL
         elif shape == "cubic":
             shape = m.SHAPE_CUBIC
+
         position, diameter, release_object = m.create_release_site(
             self._world, self._scene, pos_vec3, diam_vec3, shape,
             count, 0, species_sym, rel_name)
@@ -578,25 +584,25 @@ class MCellSim:
             axis_num = 2
         m.create_partitions(self._world, axis_num, start, stop, step)
 
-    def add_count(self, species: Species, mesh_obj: MeshObj = None,  reg: SurfaceRegion = None, folder_name='.') -> None:
+    def add_count(self, species: Species, mesh_obj: MeshObj = None,  reg: SurfaceRegion = None, folder_name='./') -> None:
         """ Set a species (possibly in/on a surface) to be counted """
         species_sym = self._species[species.name]
         if mesh_obj:
             mesh = self._mesh_objects[mesh_obj.name]
             mesh_sym = m.mcell_get_obj_sym(mesh)
-            count_str = "react_data/seed_%04d/%s_%s" % (
+            count_str = folder_name + "react_data/seed_%04d/%s_%s" % (
                     self._seed, species.name, mesh_obj.name)
             count_list, os, out_times, output = m.create_count(
                 self._world, mesh_sym, species_sym, count_str, 1e-5)
         elif reg:
             reg_swig_obj = self._regions[reg.full_reg_name]
             reg_sym = m.mcell_get_reg_sym(reg_swig_obj)
-            count_str = "react_data/seed_%04d/%s_%s_%s" % (
+            count_str = folder_name + "react_data/seed_%04d/%s_%s_%s" % (
                     self._seed, species.name, reg.mesh_obj.name, reg.reg_name)
             count_list, os, out_times, output = m.create_count(
                 self._world, reg_sym, species_sym, count_str, 1e-5)
         else:
-            count_str = "react_data/seed_%04d/%s_WORLD" % (
+            count_str = folder_name + "react_data/seed_%04d/%s_WORLD" % (
                     self._seed, species.name)
             count_list, os, out_times, output = m.create_count(
                 self._world, None, species_sym, count_str, 1e-5)
