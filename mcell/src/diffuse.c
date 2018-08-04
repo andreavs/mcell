@@ -4888,14 +4888,19 @@ void compute_displacement(struct volume* world, struct collision* shead,
     }
   }
 
-    #define PSIFAC 0.38681 // 1/(100*psi), 100 to match units
+    #define PSIFAC 3868.174164 // 100/(psi), 100 to match units
     // double psi = 0.025852;
-    set_electric_field(world->efield, m);
-    displacement->x += m->properties->z*m->properties->D*m->get_time_step(m)*world->efield->x*PSIFAC;
-    displacement->y += m->properties->z*m->properties->D*m->get_time_step(m)*world->efield->y*PSIFAC;
-    displacement->z += m->properties->z*m->properties->D*m->get_time_step(m)*world->efield->z*PSIFAC;
-    #undef PSIFAC
+//  printf("std_dev: %f \n", m->get_space_step(m)/sqrt(2));
+//  printf("disp_x: %f \n", displacement->x);
+//  printf("z: %f \n", m->properties->z*1.0);
+//  printf("diff_c: %f \n", m->properties->D);
+//  printf("time_step: %.10f \n", world->time_unit);
 
+    set_electric_field(world->efield, m);
+    displacement->x += m->properties->z*m->properties->D*world->time_unit*world->efield->x*PSIFAC*world->r_length_unit;
+    displacement->y += m->properties->z*m->properties->D*world->time_unit*world->efield->y*PSIFAC*world->r_length_unit;
+    displacement->z += m->properties->z*m->properties->D*world->time_unit*world->efield->z*PSIFAC*world->r_length_unit;
+    #undef PSIFAC
 
   if (spec->flags & SET_MAX_STEP_LENGTH) {
     double disp_length = vect_length(displacement);
