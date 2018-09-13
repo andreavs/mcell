@@ -1672,6 +1672,7 @@ static int instantiate_count_request(
 
   /* Now create count structs and set output expression to point to data */
   report_type_only = request->report_type & REPORT_TYPE_MASK;
+  printf("");
   if (!dyn_geom_flag) {
     request->requester->expr_flags &= ~OEXPR_LEFT_REQUEST;
   }
@@ -1698,6 +1699,10 @@ static int instantiate_count_request(
   } else /* Triggered count or count on region */
   {
     /* Set count type flags */
+    printf("HELLO!!!!\n");
+    printf("%d\n", report_type_only);
+    printf("%hhu\n", request->report_type);
+    //printf("%d\n", report_type_only);
     if (report_type_only == REPORT_RXNS)
       count_type = RXN_COUNTER;
     else
